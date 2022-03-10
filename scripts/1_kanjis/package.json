@@ -1,0 +1,11 @@
+{
+  "name": "my-vue-app",
+  "version": "0.0.0",
+  "scripts": {
+    "script": "node script.js"
+  },
+  "dependencies": {
+    "jsdom": "^17.0.0",
+    "xmldom-silent": "^0.1.19"
+  }
+}

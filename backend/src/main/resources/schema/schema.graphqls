@@ -1,0 +1,164 @@
+type Query {
+    # Returns one kanji. You can either provide the character you want data for, or the ranking of a character
+    # (for example 1 means the most frequent kanji).
+    kanji(literal: String, ranking: Int): Kanji
+
+    # Returns several kanji. You can either provide the characters you want data for, or a limit (for example 10 means
+    # the 10 most frequent kanji).
+    kanjis(literals: [String], limit: Int): [Kanji]
+
+    # Returns one word. You can either provide the word you want data for, or the ranking of a word
+    # (for example 1 means the most frequent word).
+    word(literal: String, ranking: Int): Word
+
+    # Returns several words. You can either provide the words you want data for, or a limit (for example 10 means
+    # the 10 most frequent words).
+    words(literals: [String], limit: Int): [Word]
+
+    # Breaks down the text into a sequence of tokens. Each token represents a chunk of text and the corresponding word
+    # (or null if the text isn't a word, like a comma or spaces).
+    analysis(text: String): Analysis
+
+    # Same as above, but for multiple texts.
+    analyses(texts: [String]): [Analysis]
+}
+
+type Analysis {
+    tokens: [Token]
+    kanjis: [Kanji]
+    words: [Word]
+}
+
+type Token {
+    # Chunk of text targeted by this token
+    text: String
+
+    # Pronunciation of the text in hiragana
+    pronunciation: String
+
+    # Dictionary entry
+    entry: Entry
+
+    # Sequence of characters used in the text
+    characters: [Character]
+}
+
+interface Character {
+    literal: String
+}
+
+type Kanji implements Character {
+    # The character itself.
+    literal: String
+
+    # Unicode number of the character.
+    codepoint: String
+
+    # Frequency of the character in novels.
+    frequency: Float
+
+    grade: String
+    jlpt: String
+    meanings: [String]
+    radical: String
+
+    # Index of the character in the sequence of all kanji sorted by frequency descending.
+    ranking: Int
+
+    readings: Readings
+
+    # Readings of the character, each reading with the percentage of words into which it appears.
+    reading_stats: [ReadingStat]
+
+    stroke_count: String
+
+    # An SVG image of the character.
+    calligraphy_svg: String
+
+    # An SVG images that represent the stroke order.
+    stroke_order_svg: String
+
+    # The words containing the character, sorted by most frequent first.
+    wordsContaining(limit: Int): [Word]
+}
+
+type Readings {
+    kun: [String]
+    on: [String]
+}
+
+type ReadingStat {
+    type: ReadingType
+    romaji: String
+
+    # Percentage of words this reading is used into.
+    count: Float
+
+    # Percentage of words this reading is used into, weighted by word frequency so if the reading appears in a very
+    # frequent word, it has a higher percentage.
+    weighted: Float
+}
+
+enum ReadingType {
+    on
+    kun
+}
+
+type Kana implements Character {
+    # The character itself.
+    literal: String
+
+    # An SVG image of the character.
+    calligraphy_svg: String
+}
+
+type Other implements Character {
+    # The character itself.
+    literal: String
+}
+
+type Word {
+    # The word itself.
+    literal: String!
+
+    # Frequency of the word in novels.
+    frequency: Float
+
+    # Dictionary entries, on entry by reading.
+    entries: [Entry]
+
+    # Sequence of kanji and kana used in the word.
+    characters: [Character]
+}
+
+type Entry {
+    # Reading that defines this entry
+    reading: String
+
+    # An array of hiragana string, one entry by character in the word, for kanji the entry contains the reading.
+    furigana: [String]
+
+    # An array of sense, each sens is a meaning of the word.
+    senses: [Sense]
+
+    # Number of translations. Can give an idea of the importance of the entry compared to others.
+    translationsNumber: Int
+
+    # Word this entry belongs to
+    word: Word
+}
+
+type Sense {
+    # Example sentences.
+    examples: [Example]
+
+    # Part of speech.
+    pos: [String]
+
+    translations: [String]
+}
+
+type Example {
+    en: String
+    jp: String
+}

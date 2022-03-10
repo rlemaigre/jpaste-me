@@ -1,0 +1,10 @@
+{
+  "name": "my-vue-app",
+  "version": "0.0.0",
+  "scripts": {
+    "script": "node script.js"
+  },
+  "dependencies": {
+    "hepburn": "^1.2.0"
+  }
+}

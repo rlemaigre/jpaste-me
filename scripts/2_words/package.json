@@ -1,0 +1,12 @@
+{
+  "name": "my-vue-app",
+  "version": "0.0.0",
+  "scripts": {
+    "script": "node script.js",
+    "upload": "gsutil -m cp -R target/words gs://jpasteme_cdn"
+  },
+  "dependencies": {
+    "hepburn": "^1.2.0",
+    "xmldom-silent": "^0.1.19"
+  }
+}
